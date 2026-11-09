@@ -133,8 +133,8 @@ class HapiPay_Gateway extends WC_Payment_Gateway {
 		$order->update_meta_data( '_hapipay_reference', $reference );
 		$order->update_meta_data( '_hapipay_link', $link['code'] );
 		$order->update_meta_data( '_hapipay_mode', $this->api()->is_test() ? 'test' : 'production' );
-		$order->update_status( 'pending', sprintf( __( 'HapiPay : page de paiement %s créée, en attente du paiement.', 'hapipay-woocommerce' ), $link['code'] ) );
 		$order->save();
+		$order->add_order_note( sprintf( __( 'HapiPay : page de paiement %1$s créée (mode %2$s), en attente du paiement.', 'hapipay-woocommerce' ), $link['code'], $this->api()->is_test() ? 'test' : 'production' ) );
 
 		return [ 'result' => 'success', 'redirect' => $link['url'] ];
 	}

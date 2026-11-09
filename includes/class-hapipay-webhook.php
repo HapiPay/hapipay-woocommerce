@@ -19,7 +19,24 @@ class HapiPay_Webhook {
 		} );
 
 		// Au retour du client : si le webhook n'est pas encore arrivé, on demande l'état à HapiPay.
-		add_action( 'woocommerce_thankyou_' . HapiPay_Gateway::ID, [ self::class, 'check_on_return' ], 5 );
+		// Avant l'affichage de la page, car WooCommerce peut demander l'e-mail du client
+		// (session perdue en changeant d'application sur un téléphone) et ne rien afficher d'autre.
+		add_action( 'template_redirect', [ self::class, 'on_return_page' ] );
+	}
+
+	public static function on_return_page(): void {
+		if ( ! function_exists( 'is_order_received_page' ) || ! is_order_received_page() ) {
+			return;
+		}
+
+		$order_id = absint( get_query_var( 'order-received' ) );
+		$order    = $order_id ? wc_get_order( $order_id ) : null;
+		$key      = isset( $_GET['key'] ) ? wc_clean( wp_unslash( $_GET['key'] ) ) : '';
+
+		// La clé de commande (secrète) prouve qu'il s'agit bien du retour de cette commande.
+		if ( $order && HapiPay_Gateway::ID === $order->get_payment_method() && hash_equals( $order->get_order_key(), $key ) ) {
+			self::check_on_return( $order_id );
+		}
 	}
 
 	public static function url(): string {
