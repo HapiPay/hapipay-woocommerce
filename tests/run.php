@@ -21,6 +21,16 @@ check( 'deux v1 après un changement de secret : l\'un suffit', HapiPay_Api::val
 check( 'en-tête vide refusé', ! HapiPay_Api::valid_signature( '', $body, $secret ) );
 check( 'secret non configuré refusé', ! HapiPay_Api::valid_signature( "t=$t,v1=$good", $body, '' ) );
 
+echo "\nMontants écrits pour une personne (FCFA pour XAF et XOF)\n";
+check( 'XAF écrit FCFA', "25\u{202F}000 FCFA" === HapiPay_Api::format_amount( 25000, 'XAF' ) );
+check( 'XOF écrit FCFA', "1\u{202F}500 FCFA" === HapiPay_Api::format_amount( 1500, 'xof' ) );
+check( 'les autres devises gardent leur code', "5\u{202F}000 MGA" === HapiPay_Api::format_amount( 5000, 'MGA' ) );
+
+echo "\nAdresse de l'API\n";
+$default = new ReflectionProperty( HapiPay_Api::class, 'base_url' );
+check( 'réglage vide : adresse de production', HapiPay_Api::DEFAULT_URL === $default->getValue( new HapiPay_Api( '', 'hpc_test_x' ) ) );
+check( 'barre finale retirée', 'https://exemple.test/api/v1' === $default->getValue( new HapiPay_Api( ' https://exemple.test/api/v1/ ', 'hpc_test_x' ) ) );
+
 $url = getenv( 'HAPIPAY_API_URL' );
 $key = getenv( 'HAPIPAY_API_KEY' );
 

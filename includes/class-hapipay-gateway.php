@@ -54,8 +54,13 @@ class HapiPay_Gateway extends WC_Payment_Gateway {
 			'api_url'        => [
 				'title'       => __( 'Adresse de l\'API', 'hapipay-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Indiquée en tête de la documentation, dans votre espace HapiPay. Elle se termine par /api/v1.', 'hapipay-woocommerce' ),
-				'placeholder' => 'https://…/api/v1',
+				'description' => sprintf(
+					/* translators: %s: adresse de l'API de production */
+					__( 'Laissez %s, sauf indication contraire de HapiPay. Elle doit être exactement celle-ci, en HTTPS : une adresse redirigée est refusée.', 'hapipay-woocommerce' ),
+					'<code>' . esc_html( HapiPay_Api::DEFAULT_URL ) . '</code>'
+				),
+				'default'     => HapiPay_Api::DEFAULT_URL,
+				'placeholder' => HapiPay_Api::DEFAULT_URL,
 			],
 			'api_key'        => [
 				'title'       => __( 'Clé d\'API', 'hapipay-woocommerce' ),
@@ -75,7 +80,8 @@ class HapiPay_Gateway extends WC_Payment_Gateway {
 	}
 
 	public function is_available(): bool {
-		return parent::is_available() && '' !== $this->get_option( 'api_key' ) && '' !== $this->get_option( 'api_url' );
+		// Adresse de l'API vide : celle de production (HapiPay_Api::DEFAULT_URL).
+		return parent::is_available() && '' !== $this->get_option( 'api_key' );
 	}
 
 	/** Teste la clé à l'enregistrement des réglages, et le dit. */

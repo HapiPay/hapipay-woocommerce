@@ -13,7 +13,7 @@ Aucun secret dans ce dépôt : chaque commerçant saisit sa propre clé d'API et
 
 ## Réglages
 
-WooCommerce → Réglages → Paiements → HapiPay : adresse de l'API, clé d'API (`hpc_test_…` pour les essais), secret du webhook.
+WooCommerce → Réglages → Paiements → HapiPay : adresse de l'API (par défaut `https://pay.scigroup.td/api/v1`, sans redirection), clé d'API (`hpc_test_…` pour les essais), secret du webhook.
 
 ## Licence
 

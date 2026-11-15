@@ -8,8 +8,21 @@ defined( 'ABSPATH' ) || exit;
 
 class HapiPay_Api {
 
+	/** Adresse de l'API de production, utilisée quand le réglage est vide. */
+	public const DEFAULT_URL = 'https://pay.scigroup.td/api/v1';
+
 	public function __construct( private string $base_url, private string $api_key ) {
-		$this->base_url = rtrim( $base_url, '/' );
+		$this->base_url = rtrim( '' !== trim( $base_url ) ? trim( $base_url ) : self::DEFAULT_URL, '/' );
+	}
+
+	/**
+	 * Montant HapiPay écrit pour une personne : « 25 000 FCFA » pour les francs
+	 * CFA (XAF et XOF), le code ISO pour les autres devises (« 5 000 MGA »).
+	 */
+	public static function format_amount( int $amount, string $currency ): string {
+		$currency = strtoupper( $currency );
+
+		return number_format( $amount, 0, ',', "\u{202F}" ) . ' ' . ( in_array( $currency, [ 'XAF', 'XOF' ], true ) ? 'FCFA' : $currency );
 	}
 
 	/** Clé de test (hpc_test_…) : tous les paiements sont simulés. */
@@ -56,9 +69,12 @@ class HapiPay_Api {
 		}
 
 		$args = [
-			'method'  => $method,
-			'timeout' => 20,
-			'headers' => [
+			'method'      => $method,
+			'timeout'     => 20,
+			// Jamais de redirection suivie : la clé et le corps n'iraient pas
+			// ailleurs que là où ils ont été envoyés.
+			'redirection' => 0,
+			'headers'     => [
 				'Authorization' => 'Bearer ' . $this->api_key,
 				'Accept'        => 'application/json',
 				'Content-Type'  => 'application/json',
@@ -78,6 +94,15 @@ class HapiPay_Api {
 
 		$code = (int) wp_remote_retrieve_response_code( $response );
 		$data = json_decode( (string) wp_remote_retrieve_body( $response ), true ) ?: [];
+
+		if ( $code >= 300 && $code < 400 ) {
+			return new WP_Error( 'hapipay_' . $code, sprintf(
+				/* translators: 1: code HTTP, 2: adresse de l'API */
+				__( 'HapiPay a répondu par une redirection (%1$d) : vérifiez l\'adresse de l\'API, en HTTPS, par exemple %2$s.', 'hapipay-woocommerce' ),
+				$code,
+				self::DEFAULT_URL
+			), [ 'status' => $code ] );
+		}
 
 		if ( $code < 200 || $code >= 300 ) {
 			$message = $data['message'] ?? sprintf( __( 'HapiPay a répondu %d.', 'hapipay-woocommerce' ), $code );

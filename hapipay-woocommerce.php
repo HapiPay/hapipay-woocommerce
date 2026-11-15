@@ -3,7 +3,7 @@
  * Plugin Name:       HapiPay pour WooCommerce
  * Plugin URI:        https://github.com/hapipay/hapipay-woocommerce
  * Description:       Encaissez vos commandes par mobile money, carte bancaire et PayPal avec HapiPay. L'argent arrive directement sur votre propre compte opérateur, sans commission.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            HapiPay
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'HAPIPAY_WC_VERSION', '0.1.0' );
+define( 'HAPIPAY_WC_VERSION', '0.1.1' );
 define( 'HAPIPAY_WC_FILE', __FILE__ );
 define( 'HAPIPAY_WC_DIR', plugin_dir_path( __FILE__ ) );
 

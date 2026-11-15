@@ -71,7 +71,7 @@ class HapiPay_Webhook {
 			'paiement.echoue'     => $order->add_order_note( __( 'HapiPay : le paiement a échoué. Le client peut réessayer.', 'hapipay-woocommerce' ) ),
 			'paiement.expire'     => $order->add_order_note( __( 'HapiPay : le client n\'a pas validé à temps, rien n\'a été débité.', 'hapipay-woocommerce' ) ),
 			'paiement.a_verifier' => $order->update_status( 'on-hold', __( 'HapiPay : l\'opérateur n\'a pas répondu clairement. Le paiement est à vérifier dans votre espace HapiPay.', 'hapipay-woocommerce' ) ),
-			'remboursement.reussi' => $order->add_order_note( sprintf( __( 'HapiPay : remboursement de %s effectué par l\'opérateur.', 'hapipay-woocommerce' ), wc_price( (float) ( $data['montant'] ?? 0 ), [ 'currency' => $data['devise'] ?? '' ] ) ) ),
+			'remboursement.reussi' => $order->add_order_note( sprintf( __( 'HapiPay : remboursement de %s effectué par l\'opérateur.', 'hapipay-woocommerce' ), HapiPay_Api::format_amount( (int) ( $data['montant'] ?? 0 ), (string) ( $data['devise'] ?? '' ) ) ) ),
 			default               => null,
 		};
 
