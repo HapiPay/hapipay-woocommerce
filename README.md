@@ -1,6 +1,6 @@
 # HapiPay pour WooCommerce
 
-Extension WooCommerce pour encaisser par mobile money, carte bancaire et PayPal avec [HapiPay](https://github.com/hapipay). L'argent va directement du client au compte opérateur du commerçant : HapiPay ne le touche jamais.
+Extension WooCommerce pour encaisser par mobile money, carte bancaire et PayPal avec [HapiPay](https://pay.scigroup.td). Pas encore de compte : [créez-le](https://pay.scigroup.td/portail/register), l'environnement de test est gratuit. L'argent va directement du client au compte opérateur du commerçant : HapiPay ne le touche jamais.
 
 ## Fonctionnement
 
@@ -13,7 +13,7 @@ Aucun secret dans ce dépôt : chaque commerçant saisit sa propre clé d'API et
 
 ## Réglages
 
-WooCommerce → Réglages → Paiements → HapiPay : adresse de l'API (par défaut `https://pay.scigroup.td/api/v1`, sans redirection), clé d'API (`hpc_test_…` pour les essais), secret du webhook.
+WooCommerce → Réglages → Paiements → HapiPay : adresse de l'API (par défaut `https://pay.scigroup.td/api/v1`, sans redirection), clé d'API (`hpc_test_…` pour les essais), secret du webhook. La page de réglages renvoie vers l'inscription et vers votre espace HapiPay.
 
 ## Licence
 

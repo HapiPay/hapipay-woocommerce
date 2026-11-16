@@ -16,6 +16,16 @@ class HapiPay_Api {
 	}
 
 	/**
+	 * Adresse d'une page du site HapiPay (inscription, espace du marchand),
+	 * déduite de l'adresse de l'API : elle suit l'instance configurée.
+	 */
+	public function site_url( string $path = '' ): string {
+		$root = (string) preg_replace( '#/api/v\d+$#', '', $this->base_url );
+
+		return '' === $path ? $root : $root . '/' . ltrim( $path, '/' );
+	}
+
+	/**
 	 * Montant HapiPay écrit pour une personne : « 25 000 FCFA » pour les francs
 	 * CFA (XAF et XOF), le code ISO pour les autres devises (« 5 000 MGA »).
 	 */

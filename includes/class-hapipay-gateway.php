@@ -49,7 +49,7 @@ class HapiPay_Gateway extends WC_Payment_Gateway {
 			'description'    => [
 				'title'   => __( 'Texte affiché à la caisse', 'hapipay-woocommerce' ),
 				'type'    => 'textarea',
-				'default' => __( 'Payez en toute sécurité avec Airtel Money, Orange Money, MVola, votre carte bancaire ou PayPal, sur la page de paiement HapiPay.', 'hapipay-woocommerce' ),
+				'default' => __( 'Payez par Airtel Money, Orange Money, MVola, carte bancaire ou PayPal, sur la page de paiement HapiPay.', 'hapipay-woocommerce' ),
 			],
 			'api_url'        => [
 				'title'       => __( 'Adresse de l\'API', 'hapipay-woocommerce' ),
@@ -65,18 +65,40 @@ class HapiPay_Gateway extends WC_Payment_Gateway {
 			'api_key'        => [
 				'title'       => __( 'Clé d\'API', 'hapipay-woocommerce' ),
 				'type'        => 'password',
-				'description' => __( 'Créée dans votre espace HapiPay, menu Développeurs → Clés d\'API. Une clé hpc_test_… simule les paiements ; une clé hpc_… encaisse pour de vrai.', 'hapipay-woocommerce' ),
+				'description' => sprintf(
+					/* translators: %s: adresse de l'espace HapiPay */
+					__( 'Créée dans <a href="%s" target="_blank" rel="noopener">votre espace HapiPay</a>, menu Développeurs → Clés d\'API. Une clé hpc_test_… simule les paiements ; une clé hpc_… encaisse pour de vrai.', 'hapipay-woocommerce' ),
+					esc_url( ( new HapiPay_Api( '', '' ) )->site_url( 'portail' ) )
+				),
 			],
 			'webhook_secret' => [
 				'title'       => __( 'Secret du webhook', 'hapipay-woocommerce' ),
 				'type'        => 'password',
 				'description' => sprintf(
 					/* translators: %s: adresse du webhook */
-					__( 'Dans votre espace HapiPay, menu Développeurs → Webhooks, ajoutez cette adresse : %s puis copiez ici son secret (bouton « Secret »). C\'est grâce à lui que les commandes passent à « payée ».', 'hapipay-woocommerce' ),
-					'<code>' . esc_html( HapiPay_Webhook::url() ) . '</code>'
+					__( 'Dans <a href="%2$s" target="_blank" rel="noopener">votre espace HapiPay</a>, menu Développeurs → Webhooks, ajoutez cette adresse : %1$s puis copiez ici son secret (bouton « Secret »). C\'est grâce à lui que les commandes passent à « payée ».', 'hapipay-woocommerce' ),
+					'<code>' . esc_html( HapiPay_Webhook::url() ) . '</code>',
+					esc_url( ( new HapiPay_Api( '', '' ) )->site_url( 'portail' ) )
 				),
 			],
 		];
+	}
+
+	/** En tête des réglages : où créer son compte, où trouver sa clé. */
+	public function admin_options(): void {
+		$api = $this->api();
+
+		echo '<div class="notice notice-info inline" style="margin:12px 0 18px;"><p><strong>' . esc_html__( 'Pas encore de compte HapiPay ?', 'hapipay-woocommerce' ) . '</strong> '
+			. sprintf(
+				/* translators: 1: adresse d'inscription, 2: nom du site, 3: adresse de l'espace HapiPay */
+				wp_kses( __( '<a href="%1$s" target="_blank" rel="noopener">Créez-le sur %2$s</a> : l\'environnement de test est gratuit et illimité. Déjà inscrit ? <a href="%3$s" target="_blank" rel="noopener">Ouvrir mon espace HapiPay</a>.', 'hapipay-woocommerce' ), [ 'a' => [ 'href' => [], 'target' => [], 'rel' => [] ] ] ),
+				esc_url( $api->site_url( 'portail/register' ) ),
+				esc_html( (string) wp_parse_url( $api->site_url(), PHP_URL_HOST ) ),
+				esc_url( $api->site_url( 'portail' ) )
+			)
+			. '</p></div>';
+
+		parent::admin_options();
 	}
 
 	public function is_available(): bool {

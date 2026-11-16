@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
 WC tested up to: 11.2
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,11 @@ HapiPay encaisse des montants entiers. Les boutiques en FCFA, en ariary ou en fr
 Vérifiez le webhook : son adresse, et le secret copié dans les réglages. Sans lui, la commande n'est confirmée que lorsque le client revient sur la boutique.
 
 == Changelog ==
+
+= 0.1.2 =
+* Réglages : lien pour créer son compte HapiPay, et pour ouvrir son espace (clés d'API, webhooks).
+* Liste des extensions : lien « Mon espace HapiPay » ; le site de l'extension mène à la page Intégrations de HapiPay.
+* Texte de caisse par défaut plus direct. Testé avec WordPress 7.1 et WooCommerce 11.3.
 
 = 0.1.1 =
 * Adresse de l'API de production proposée par défaut : https://pay.scigroup.td/api/v1 (un réglage vide l'utilise).

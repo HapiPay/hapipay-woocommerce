@@ -1,22 +1,23 @@
 <?php
 /**
  * Plugin Name:       HapiPay pour WooCommerce
- * Plugin URI:        https://github.com/hapipay/hapipay-woocommerce
+ * Plugin URI:        https://pay.scigroup.td/integrations
  * Description:       Encaissez vos commandes par mobile money, carte bancaire et PayPal avec HapiPay. L'argent arrive directement sur votre propre compte opérateur, sans commission.
- * Version:           0.1.1
+ * Version:           0.1.2
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            HapiPay
+ * Author URI:        https://pay.scigroup.td
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       hapipay-woocommerce
  * WC requires at least: 8.0
- * WC tested up to:   11.2
+ * WC tested up to:   11.3
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'HAPIPAY_WC_VERSION', '0.1.1' );
+define( 'HAPIPAY_WC_VERSION', '0.1.2' );
 define( 'HAPIPAY_WC_FILE', __FILE__ );
 define( 'HAPIPAY_WC_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -63,10 +64,15 @@ add_action( 'woocommerce_blocks_loaded', function () {
 	} );
 } );
 
-// Lien « Réglages » dans la liste des extensions.
+// Liens « Réglages » et « Mon espace HapiPay » dans la liste des extensions.
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), function ( array $links ) {
-	$url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=hapipay' );
-	array_unshift( $links, '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Réglages', 'hapipay-woocommerce' ) . '</a>' );
+	$url  = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=hapipay' );
+	$site = class_exists( 'HapiPay_Api' ) ? ( new HapiPay_Api( '', '' ) )->site_url( 'portail' ) : 'https://pay.scigroup.td/portail';
+	array_unshift(
+		$links,
+		'<a href="' . esc_url( $url ) . '">' . esc_html__( 'Réglages', 'hapipay-woocommerce' ) . '</a>',
+		'<a href="' . esc_url( $site ) . '" target="_blank" rel="noopener">' . esc_html__( 'Mon espace HapiPay', 'hapipay-woocommerce' ) . '</a>'
+	);
 
 	return $links;
 } );

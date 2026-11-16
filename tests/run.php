@@ -31,6 +31,11 @@ $default = new ReflectionProperty( HapiPay_Api::class, 'base_url' );
 check( 'réglage vide : adresse de production', HapiPay_Api::DEFAULT_URL === $default->getValue( new HapiPay_Api( '', 'hpc_test_x' ) ) );
 check( 'barre finale retirée', 'https://exemple.test/api/v1' === $default->getValue( new HapiPay_Api( ' https://exemple.test/api/v1/ ', 'hpc_test_x' ) ) );
 
+echo "\nLiens vers le site HapiPay\n";
+check( 'site déduit de l\'API de production', 'https://pay.scigroup.td/portail/register' === ( new HapiPay_Api( '', 'k' ) )->site_url( 'portail/register' ) );
+check( 'site d\'une autre instance', 'https://exemple.test/portail' === ( new HapiPay_Api( 'https://exemple.test/api/v1/', 'k' ) )->site_url( '/portail' ) );
+check( 'racine du site', 'https://pay.scigroup.td' === ( new HapiPay_Api( '', 'k' ) )->site_url() );
+
 $url = getenv( 'HAPIPAY_API_URL' );
 $key = getenv( 'HAPIPAY_API_KEY' );
 
