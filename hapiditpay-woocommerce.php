@@ -3,7 +3,7 @@
  * Plugin Name:       HapiditPay pour WooCommerce
  * Plugin URI:        https://hapiditpay.com/integrations
  * Description:       Encaissez vos commandes par mobile money, carte bancaire et PayPal avec HapiditPay. L'argent arrive directement sur votre propre compte opérateur, sans commission.
- * Version:           0.2.0
+ * Version:           0.2.1
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Hapidit Group
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'HAPIDITPAY_WC_VERSION', '0.2.0' );
+define( 'HAPIDITPAY_WC_VERSION', '0.2.1' );
 define( 'HAPIDITPAY_WC_FILE', __FILE__ );
 define( 'HAPIDITPAY_WC_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -41,10 +41,6 @@ add_action( 'plugins_loaded', function () {
 	require_once HAPIDITPAY_WC_DIR . 'includes/class-hapiditpay-api.php';
 	require_once HAPIDITPAY_WC_DIR . 'includes/class-hapiditpay-gateway.php';
 	require_once HAPIDITPAY_WC_DIR . 'includes/class-hapiditpay-webhook.php';
-	require_once HAPIDITPAY_WC_DIR . 'includes/class-hapiditpay-upgrade.php';
-
-	// Réglages et commandes de l'extension sous son ancien nom, repris avant tout le reste.
-	HapiditPay_Upgrade::register();
 
 	add_filter( 'woocommerce_payment_gateways', function ( array $gateways ) {
 		$gateways[] = HapiditPay_Gateway::class;

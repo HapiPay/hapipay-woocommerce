@@ -15,10 +15,6 @@ Aucun secret dans ce dépôt : chaque commerçant saisit sa propre clé d'API et
 
 WooCommerce → Réglages → Paiements → HapiditPay : adresse de l'API (par défaut `https://hapiditpay.com/api/v1`, sans redirection), clé d'API (`hdp_test_…` pour les essais), secret du webhook. La page de réglages renvoie vers l'inscription et vers votre espace HapiditPay.
 
-## Changement de nom (0.2.0)
-
-L'extension s'appelait « HapiPay pour WooCommerce » jusqu'à la version 0.1.2. À la première ouverture de la 0.2.0, ses réglages (`woocommerce_hapipay_settings`, ordre des moyens de paiement), le moyen de paiement des commandes (`hapipay`) et leurs métadonnées (`_hapipay_reference`, `_hapipay_link`, `_hapipay_mode`) sont recopiés sous le nouveau nom puis effacés, et l'ancienne extension est désactivée. L'ancienne adresse du webhook n'est plus reçue : déclarez `/wp-json/hapiditpay/v1/webhook` dans votre espace HapiditPay. Voir `includes/class-hapiditpay-upgrade.php`.
-
 ## Licence
 
 GPL-2.0-or-later.

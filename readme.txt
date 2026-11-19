@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
 WC tested up to: 11.2
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,8 +32,8 @@ HapiditPay relie votre boutique aux opérateurs de paiement d'Afrique centrale e
 
 == Upgrade Notice ==
 
-= 0.2.0 =
-Nouveau nom, HapiditPay. Vos réglages et vos commandes en attente sont repris automatiquement ; l'ancienne extension est désactivée et peut être supprimée.
+= 0.2.1 =
+Retrait du code de reprise des réglages d'une version antérieure : une installation précédente se reconfigure depuis la page de réglages.
 
 == Frequently Asked Questions ==
 
@@ -47,11 +47,13 @@ Vérifiez le webhook : son adresse, et le secret copié dans les réglages. Sans
 
 == Changelog ==
 
+= 0.2.1 =
+* Retrait du code de reprise des réglages d'une version antérieure : une installation précédente se reconfigure depuis la page de réglages.
+
 = 0.2.0 =
-* Changement de nom : l'extension « HapiPay pour WooCommerce » devient « HapiditPay pour WooCommerce » (dossier, fichier principal, moyen de paiement et domaine de traduction `hapiditpay-woocommerce`).
-* Reprise automatique : à la première ouverture, les réglages de l'ancienne extension (clé d'API, secret du webhook, textes de caisse, place parmi les moyens de paiement) et le suivi des commandes en attente sont recopiés sous le nouveau nom, puis effacés ; l'ancienne extension est désactivée et peut être supprimée.
-* L'adresse du webhook devient `/wp-json/hapiditpay/v1/webhook` (affichée dans les réglages). L'ancienne adresse n'est plus reçue : déclarez la nouvelle dans votre espace HapiditPay.
-* Adresse de l'API de production : https://hapiditpay.com/api/v1 (l'ancienne adresse enregistrée est remplacée). Clés d'API `hdp_…` et `hdp_test_…`. En-tête du webhook `HapiditPay-Signature`.
+* Changement de nom : le module s'appelle désormais HapiditPay.
+* L'adresse du webhook devient `/wp-json/hapiditpay/v1/webhook` (affichée dans les réglages) : déclarez-la dans votre espace HapiditPay.
+* Adresse de l'API de production : https://hapiditpay.com/api/v1. Clés d'API `hdp_…` et `hdp_test_…`. En-tête du webhook `HapiditPay-Signature`.
 
 = 0.1.2 =
 * Réglages : lien pour créer son compte HapiditPay, et pour ouvrir son espace (clés d'API, webhooks).
