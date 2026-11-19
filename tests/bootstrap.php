@@ -1,11 +1,11 @@
 <?php
 /**
  * Banc d'essai sans WordPress : les quelques fonctions WordPress dont
- * HapiPay_Api a besoin, en version minimale (requêtes HTTP par cURL).
+ * HapiditPay_Api a besoin, en version minimale (requêtes HTTP par cURL).
  */
 
 define( 'ABSPATH', __DIR__ );
-define( 'HAPIPAY_WC_VERSION', 'test' );
+define( 'HAPIDITPAY_WC_VERSION', 'test' );
 
 class WP_Error {
 	public function __construct( private string $code = '', private string $message = '', private $data = null ) {}
@@ -36,10 +36,10 @@ function wp_remote_request( string $url, array $args ) {
 	return [ 'code' => curl_getinfo( $ch, CURLINFO_HTTP_CODE ), 'body' => $body ];
 }
 
-require dirname( __DIR__ ) . '/includes/class-hapipay-api.php';
+require dirname( __DIR__ ) . '/includes/class-hapiditpay-api.php';
 
-$GLOBALS['hapipay_failures'] = 0;
+$GLOBALS['hapiditpay_failures'] = 0;
 function check( string $label, bool $ok ): void {
 	echo ( $ok ? '  ok      ' : '  ÉCHEC   ' ) . $label . "\n";
-	if ( ! $ok ) { $GLOBALS['hapipay_failures']++; }
+	if ( ! $ok ) { $GLOBALS['hapiditpay_failures']++; }
 }

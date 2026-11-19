@@ -1,10 +1,10 @@
-/* HapiPay dans le tunnel de paiement « en blocs ». Aucun champ : le client paie sur la page HapiPay. */
+/* HapiditPay dans le tunnel de paiement « en blocs ». Aucun champ : le client paie sur la page HapiditPay. */
 ( function () {
 	const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
 	const { createElement: el } = window.wp.element;
 	const { decodeEntities } = window.wp.htmlEntities;
-	const data = window.wc.wcSettings.getSetting( 'hapipay_data', {} );
-	const title = decodeEntities( data.title || 'HapiPay' );
+	const data = window.wc.wcSettings.getSetting( 'hapiditpay_data', {} );
+	const title = decodeEntities( data.title || 'HapiditPay' );
 
 	const Label = () =>
 		el( 'span', { style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
@@ -14,7 +14,7 @@
 	const Content = () => el( 'p', null, decodeEntities( data.description || '' ) );
 
 	registerPaymentMethod( {
-		name: 'hapipay',
+		name: 'hapiditpay',
 		label: el( Label ),
 		content: el( Content ),
 		edit: el( Content ),

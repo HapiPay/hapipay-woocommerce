@@ -1,22 +1,22 @@
 <?php
 /**
- * Appels à l'API HapiPay : création d'une page de paiement à usage unique,
+ * Appels à l'API HapiditPay : création d'une page de paiement à usage unique,
  * lecture de son état, et vérification de la signature des webhooks.
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class HapiPay_Api {
+class HapiditPay_Api {
 
 	/** Adresse de l'API de production, utilisée quand le réglage est vide. */
-	public const DEFAULT_URL = 'https://pay.scigroup.td/api/v1';
+	public const DEFAULT_URL = 'https://hapiditpay.com/api/v1';
 
 	public function __construct( private string $base_url, private string $api_key ) {
 		$this->base_url = rtrim( '' !== trim( $base_url ) ? trim( $base_url ) : self::DEFAULT_URL, '/' );
 	}
 
 	/**
-	 * Adresse d'une page du site HapiPay (inscription, espace du marchand),
+	 * Adresse d'une page du site HapiditPay (inscription, espace du marchand),
 	 * déduite de l'adresse de l'API : elle suit l'instance configurée.
 	 */
 	public function site_url( string $path = '' ): string {
@@ -26,7 +26,7 @@ class HapiPay_Api {
 	}
 
 	/**
-	 * Montant HapiPay écrit pour une personne : « 25 000 FCFA » pour les francs
+	 * Montant HapiditPay écrit pour une personne : « 25 000 FCFA » pour les francs
 	 * CFA (XAF et XOF), le code ISO pour les autres devises (« 5 000 MGA »).
 	 */
 	public static function format_amount( int $amount, string $currency ): string {
@@ -35,9 +35,9 @@ class HapiPay_Api {
 		return number_format( $amount, 0, ',', "\u{202F}" ) . ' ' . ( in_array( $currency, [ 'XAF', 'XOF' ], true ) ? 'FCFA' : $currency );
 	}
 
-	/** Clé de test (hpc_test_…) : tous les paiements sont simulés. */
+	/** Clé de test (hdp_test_…) : tous les paiements sont simulés. */
 	public function is_test(): bool {
-		return str_starts_with( $this->api_key, 'hpc_test_' );
+		return str_starts_with( $this->api_key, 'hdp_test_' );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class HapiPay_Api {
 		}
 
 		if ( empty( $response['data']['code'] ) || empty( $response['data']['url'] ) ) {
-			return new WP_Error( 'hapipay_reponse', __( 'Réponse inattendue de HapiPay.', 'hapipay-woocommerce' ) );
+			return new WP_Error( 'hapiditpay_reponse', __( 'Réponse inattendue de HapiditPay.', 'hapiditpay-woocommerce' ) );
 		}
 
 		return [ 'code' => $response['data']['code'], 'url' => $response['data']['url'] ];
@@ -75,7 +75,7 @@ class HapiPay_Api {
 
 	private function request( string $method, string $path, ?array $body = null ) {
 		if ( '' === $this->base_url || '' === $this->api_key ) {
-			return new WP_Error( 'hapipay_config', __( 'HapiPay n\'est pas configuré : adresse de l\'API et clé requises.', 'hapipay-woocommerce' ) );
+			return new WP_Error( 'hapiditpay_config', __( 'HapiditPay n\'est pas configuré : adresse de l\'API et clé requises.', 'hapiditpay-woocommerce' ) );
 		}
 
 		$args = [
@@ -88,7 +88,7 @@ class HapiPay_Api {
 				'Authorization' => 'Bearer ' . $this->api_key,
 				'Accept'        => 'application/json',
 				'Content-Type'  => 'application/json',
-				'User-Agent'    => 'HapiPay-WooCommerce/' . HAPIPAY_WC_VERSION,
+				'User-Agent'    => 'HapiditPay-WooCommerce/' . HAPIDITPAY_WC_VERSION,
 			],
 		];
 
@@ -106,25 +106,25 @@ class HapiPay_Api {
 		$data = json_decode( (string) wp_remote_retrieve_body( $response ), true ) ?: [];
 
 		if ( $code >= 300 && $code < 400 ) {
-			return new WP_Error( 'hapipay_' . $code, sprintf(
+			return new WP_Error( 'hapiditpay_' . $code, sprintf(
 				/* translators: 1: code HTTP, 2: adresse de l'API */
-				__( 'HapiPay a répondu par une redirection (%1$d) : vérifiez l\'adresse de l\'API, en HTTPS, par exemple %2$s.', 'hapipay-woocommerce' ),
+				__( 'HapiditPay a répondu par une redirection (%1$d) : vérifiez l\'adresse de l\'API, en HTTPS, par exemple %2$s.', 'hapiditpay-woocommerce' ),
 				$code,
 				self::DEFAULT_URL
 			), [ 'status' => $code ] );
 		}
 
 		if ( $code < 200 || $code >= 300 ) {
-			$message = $data['message'] ?? sprintf( __( 'HapiPay a répondu %d.', 'hapipay-woocommerce' ), $code );
+			$message = $data['message'] ?? sprintf( __( 'HapiditPay a répondu %d.', 'hapiditpay-woocommerce' ), $code );
 
-			return new WP_Error( 'hapipay_' . $code, $message, [ 'status' => $code, 'body' => $data ] );
+			return new WP_Error( 'hapiditpay_' . $code, $message, [ 'status' => $code, 'body' => $data ] );
 		}
 
 		return $data;
 	}
 
 	/**
-	 * Vérifie l'en-tête HapiPay-Signature : t=<horodatage>,v1=<hmac>[,v1=<hmac>].
+	 * Vérifie l'en-tête HapiditPay-Signature : t=<horodatage>,v1=<hmac>[,v1=<hmac>].
 	 * Deux v1 pendant les 24 h qui suivent un changement de secret.
 	 */
 	public static function valid_signature( string $header, string $raw_body, string $secret, int $tolerance = 300 ): bool {
